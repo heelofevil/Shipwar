@@ -1,0 +1,30 @@
+.battle-field .col {
+    aspect-ratio: 1;
+}
+
+.cell {
+    border-left: 1px dotted #0c63e4;
+    border-top: 1px dotted #0c63e4;
+    background-color: #CCEEFF;
+}
+
+/* Пустая клетка */
+.open.cell[data-state='0'] {
+    /*background-color: #CCEEFF;*/
+}
+
+/* Корабль */
+.open.cell[data-state='1'] {
+    background-color: #808080;
+}
+
+/* Пустая клетка после выстрела */
+.open.cell[data-state='2'] {
+    background-color: #00a9ff;
+}
+
+/* Корабль после выстрела */
+.open.cell[data-state='3'] {
+    background-color: #FF0000;
+}
+

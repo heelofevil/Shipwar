@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="EdgeQA">
+    <title>Морской бой</title>
+
+    <link href="css/bootstrap.css" rel="stylesheet" crossorigin="anonymous">
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" href="img/favicons/apple-touch-icon.png" sizes="180x180">
+    <link rel="icon" href="img/favicons/favicon-32x32.png" sizes="32x32" type="image/png">
+    <link rel="icon" href="img/favicons/favicon-16x16.png" sizes="16x16" type="image/png">
+    <link rel="mask-icon" href="img/favicons/safari-pinned-tab.svg" color="#712cf9">
+    <link rel="icon" href="img/favicons/favicon.ico">
+    <meta name="theme-color" content="#712cf9">
+
+    <!-- Custom styles for this template -->
+    <link href="css/app.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container-fluid">
+        <nav class="navbar navbar-light bg-light">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">
+                    <img src="img/favicons/apple-touch-icon.png" alt="Лого Морской бой" width="32" height="32" id="Logo" class="d-inline-block align-text-top">
+                    <b>Морской бой</b>
+                </a>
+                <div class="d-flex">
+                    <a class="btn btn-outline-primary" id="start-btn" type="submit">Start game</a>
+                </div>
+            </div>
+        </nav>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col col-12 col-md-6">
+                <h4 class="my-2">Мое поле</h4>
+                <div class="battle-field self my-3">
+                    <div class="row">
+                        <div class="col col-1" ></div>
+                        <div class="col col-1">А</div>
+                        <div class="col col-1">Б</div>
+                        <div class="col col-1">В</div>
+                        <div class="col col-1">Г</div>
+                        <div class="col col-1">Д</div>
+                        <div class="col col-1">Е</div>
+                        <div class="col col-1">Ж</div>
+                        <div class="col col-1">З</div>
+                        <div class="col col-1">И</div>
+                        <div class="col col-1">К</div>
+                    </div>
+                    <div class="row r0">
+                        <div class="col col-1">1</div>
+                        <div class="col col-1 cell c0"></div>
+                        <div class="col col-1 cell c1"></div>
+                        <div class="col col-1 cell c2"></div>
+                        <div class="col col-1 cell c3"></div>
+                        <div class="col col-1 cell c4"></div>
+                        <div class="col col-1 cell c5"></div>
+                        <div class="col col-1 cell c6"></div>
+                        <div class="col col-1 cell c7"></div>
+                        <div class="col col-1 cell c8"></div>
+                        <div class="col col-1 cell c9"></div>
+                    </div>
+                    <div class="row r1">
+                        <div class="col col-1">2</div>
+                        <div class="col col-1 cell c0"></div>
+                        <div class="col col-1 cell c1"></div>
+                        <div class="col col-1 cell c2"></div>
+                        <div class="col col-1 cell c3"></div>
+                        <div class="col col-1 cell c4"></div>
+                        <div class="col col-1 cell c5"></div>
+                        <div class="col col-1 cell c6"></div>
+                        <div class="col col-1 cell c7"></div>
+                        <div class="col col-1 cell c8"></div>
+                        <div class="col col-1 cell c9"></div>
+                    </div>
+                    <div class="row r2">
+                        <div class="col col-1">3</div>
+                        <div class="col col-1 cell c0"></div>
+                        <div class="col col-1 cell c1"></div>
+                        <div class="col col-1 cell c2"></div>
+                        <div class="col col-1 cell c3"></div>
+                        <div class="col col-1 cell c4"></div>
+                        <div class="col col-1 cell c5"></div>
+                        <div class="col col-1 cell c6"></div>
+                        <div class="col col-1 cell c7"></div>
+                        <div class="col col-1 cell c8"></div>
+                        <div class="col col-1 cell c9"></div>
+                    </div>
+                    <div class="row r3">
+                        <div class="col col-1">4</div>
+                        <div class="col col-1 cell c0"></div>
+                        <div class="col col-1 cell c1"></div>
+                        <div class="col col-1 cell c2"></div>
+                        <div class="col col-1 cell c3"></div>
+                        <div class="col col-1 cell c4"></div>
+                        <div class="col col-1 cell c5"></div>
+                        <div class="col col-1 cell c6"></div>
+                        <div class="col col-1 cell c7"></div>
+                        <div class="col col-1 cell c8"></div>
+                        <div class="col col-1 cell c9"></div>
+                    </div>
+                    <div class="row r4">
+                        <div class="col col-1">5</div>
+                        <div class="col col-1 cell c0"></div>
+                        <div class="col col-1 cell c1"></div>
+                        <div class="col col-1 cell c2"></div>
+                        <div class="col col-1 cell c3"></div>
+                        <div class="col col-1 cell c4"></div>
+                        <div class="col col-1 cell c5"></div>
+                        <div class="col col-1 cell c6"></div>
+                        <div class="col col-1 cell c7"></div>
+                        <div class="col col-1 cell c8"></div>
+                        <div class="col col-1 cell c9"></div>
+                    </div>
+                    <div class="row r5">
+                        <div class="col col-1">6</div>
+                        <div class="col col-1 cell c0"></div>
+                        <div class="col col-1 cell c1"></div>
+                        <div class="col col-1 cell c2"></div>
+                        <div class="col col-1 cell c3"></div>
+                        <div class="col col-1 cell c4"></div>
+                        <div class="col col-1 cell c5"></div>
+                        <div class="col col-1 cell c6"></div>
+                        <div class="col col-1 cell c7"></div>
+                        <div class="col col-1 cell c8"></div>
+                        <div class="col col-1 cell c9"></div>
+                    </div>
+                    <div class="row r6">
+                        <div class="col col-1">7</div>
+                        <div class="col col-1 cell c0"></div>
+                        <div class="col col-1 cell c1"></div>
+                        <div class="col col-1 cell c2"></div>
+                        <div class="col col-1 cell c3"></div>
+                        <div class="col col-1 cell c4"></div>
+                        <div class="col col-1 cell c5"></div>
+                        <div class="col col-1 cell c6"></div>
+                        <div class="col col-1 cell c7"></div>
+                        <div class="col col-1 cell c8"></div>
+                        <div class="col col-1 cell c9"></div>
+                    </div>
+                    <div class="row r7">
+                        <div class="col col-1">8</div>
+                        <div class="col col-1 cell c0"></div>
+                        <div class="col col-1 cell c1"></div>
+                        <div class="col col-1 cell c2"></div>
+                        <div class="col col-1 cell c3"></div>
+                        <div class="col col-1 cell c4"></div>
+                        <div class="col col-1 cell c5"></div>
+                        <div class="col col-1 cell c6"></div>
+                        <div class="col col-1 cell c7"></div>
+                        <div class="col col-1 cell c8"></div>
+                        <div class="col col-1 cell c9"></div>
+                    </div>
+                    <div class="row r8">
+                        <div class="col col-1">9</div>
+                        <div class="col col-1 cell c0"></div>
+                        <div class="col col-1 cell c1"></div>
+                        <div class="col col-1 cell c2"></div>
+                        <div class="col col-1 cell c3"></div>
+                        <div class="col col-1 cell c4"></div>
+                        <div class="col col-1 cell c5"></div>
+                        <div class="col col-1 cell c6"></div>
+                        <div class="col col-1 cell c7"></div>
+                        <div class="col col-1 cell c8"></div>
+                        <div class="col col-1 cell c9"></div>
+                    </div>
+                    <div class="row r9">
+                        <div class="col col-1">10</div>
+                        <div class="col col-1 cell c0"></div>
+                        <div class="col col-1 cell c1"></div>
+                        <div class="col col-1 cell c2"></div>
+                        <div class="col col-1 cell c3"></div>
+                        <div class="col col-1 cell c4"></div>
+                        <div class="col col-1 cell c5"></div>
+                        <div class="col col-1 cell c6"></div>
+                        <div class="col col-1 cell c7"></div>
+                        <div class="col col-1 cell c8"></div>
+                        <div class="col col-1 cell c9"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6">
+                <h4 class="my-2">Поле противника</h4>
+                <div class="battle-field enemy my-3">
+                    <div class="row">
+                        <div class="col col-1"></div>
+                        <div class="col col-1">А</div>
+                        <div class="col col-1">Б</div>
+                        <div class="col col-1">В</div>
+                        <div class="col col-1">Г</div>
+                        <div class="col col-1">Д</div>
+                        <div class="col col-1">Е</div>
+                        <div class="col col-1">Ж</div>
+                        <div class="col col-1">З</div>
+                        <div class="col col-1">И</div>
+                        <div class="col col-1">К</div>
+                    </div>
+                    <div class="row r0">
+                        <div class="col col-1">1</div>
+                        <div class="col col-1 cell c0"></div>
+                        <div class="col col-1 cell c1"></div>
+                        <div class="col col-1 cell c2"></div>
+                        <div class="col col-1 cell c3"></div>
+                        <div class="col col-1 cell c4"></div>
+                        <div class="col col-1 cell c5"></div>
+                        <div class="col col-1 cell c6"></div>
+                        <div class="col col-1 cell c7"></div>
+                        <div class="col col-1 cell c8"></div>
+                        <div class="col col-1 cell c9"></div>
+                    </div>
+                    <div class="row r1">
+                        <div class="col col-1">2</div>
+                        <div class="col col-1 cell c0"></div>
+                        <div class="col col-1 cell c1"></div>
+                        <div class="col col-1 cell c2"></div>
+                        <div class="col col-1 cell c3"></div>
+                        <div class="col col-1 cell c4"></div>
+                        <div class="col col-1 cell c5"></div>
+                        <div class="col col-1 cell c6"></div>
+                        <div class="col col-1 cell c7"></div>
+                        <div class="col col-1 cell c8"></div>
+                        <div class="col col-1 cell c9"></div>
+                    </div>
+                    <div class="row r2">
+                        <div class="col col-1">3</div>
+                        <div class="col col-1 cell c0"></div>
+                        <div class="col col-1 cell c1"></div>
+                        <div class="col col-1 cell c2"></div>
+                        <div class="col col-1 cell c3"></div>
+                        <div class="col col-1 cell c4"></div>
+                        <div class="col col-1 cell c5"></div>
+                        <div class="col col-1 cell c6"></div>
+                        <div class="col col-1 cell c7"></div>
+                        <div class="col col-1 cell c8"></div>
+                        <div class="col col-1 cell c9"></div>
+                    </div>
+                    <div class="row r3">
+                        <div class="col col-1">4</div>
+                        <div class="col col-1 cell c0"></div>
+                        <div class="col col-1 cell c1"></div>
+                        <div class="col col-1 cell c2"></div>
+                        <div class="col col-1 cell c3"></div>
+                        <div class="col col-1 cell c4"></div>
+                        <div class="col col-1 cell c5"></div>
+                        <div class="col col-1 cell c6"></div>
+                        <div class="col col-1 cell c7"></div>
+                        <div class="col col-1 cell c8"></div>
+                        <div class="col col-1 cell c9"></div>
+                    </div>
+                    <div class="row r4">
+                        <div class="col col-1">5</div>
+                        <div class="col col-1 cell c0"></div>
+                        <div class="col col-1 cell c1"></div>
+                        <div class="col col-1 cell c2"></div>
+                        <div class="col col-1 cell c3"></div>
+                        <div class="col col-1 cell c4"></div>
+                        <div class="col col-1 cell c5"></div>
+                        <div class="col col-1 cell c6"></div>
+                        <div class="col col-1 cell c7"></div>
+                        <div class="col col-1 cell c8"></div>
+                        <div class="col col-1 cell c9"></div>
+                    </div>
+                    <div class="row r5">
+                        <div class="col col-1">6</div>
+                        <div class="col col-1 cell c0"></div>
+                        <div class="col col-1 cell c1"></div>
+                        <div class="col col-1 cell c2"></div>
+                        <div class="col col-1 cell c3"></div>
+                        <div class="col col-1 cell c4"></div>
+                        <div class="col col-1 cell c5"></div>
+                        <div class="col col-1 cell c6"></div>
+                        <div class="col col-1 cell c7"></div>
+                        <div class="col col-1 cell c8"></div>
+                        <div class="col col-1 cell c9"></div>
+                    </div>
+                    <div class="row r6">
+                        <div class="col col-1">7</div>
+                        <div class="col col-1 cell c0"></div>
+                        <div class="col col-1 cell c1"></div>
+                        <div class="col col-1 cell c2"></div>
+                        <div class="col col-1 cell c3"></div>
+                        <div class="col col-1 cell c4"></div>
+                        <div class="col col-1 cell c5"></div>
+                        <div class="col col-1 cell c6"></div>
+                        <div class="col col-1 cell c7"></div>
+                        <div class="col col-1 cell c8"></div>
+                        <div class="col col-1 cell c9"></div>
+                    </div>
+                    <div class="row r7">
+                        <div class="col col-1">8</div>
+                        <div class="col col-1 cell c0"></div>
+                        <div class="col col-1 cell c1"></div>
+                        <div class="col col-1 cell c2"></div>
+                        <div class="col col-1 cell c3"></div>
+                        <div class="col col-1 cell c4"></div>
+                        <div class="col col-1 cell c5"></div>
+                        <div class="col col-1 cell c6"></div>
+                        <div class="col col-1 cell c7"></div>
+                        <div class="col col-1 cell c8"></div>
+                        <div class="col col-1 cell c9"></div>
+                    </div>
+                    <div class="row r8">
+                        <div class="col col-1">9</div>
+                        <div class="col col-1 cell c0"></div>
+                        <div class="col col-1 cell c1"></div>
+                        <div class="col col-1 cell c2"></div>
+                        <div class="col col-1 cell c3"></div>
+                        <div class="col col-1 cell c4"></div>
+                        <div class="col col-1 cell c5"></div>
+                        <div class="col col-1 cell c6"></div>
+                        <div class="col col-1 cell c7"></div>
+                        <div class="col col-1 cell c8"></div>
+                        <div class="col col-1 cell c9"></div>
+                    </div>
+                    <div class="row r9">
+                        <div class="col col-1">10</div>
+                        <div class="col col-1 cell c0"></div>
+                        <div class="col col-1 cell c1"></div>
+                        <div class="col col-1 cell c2"></div>
+                        <div class="col col-1 cell c3"></div>
+                        <div class="col col-1 cell c4"></div>
+                        <div class="col col-1 cell c5"></div>
+                        <div class="col col-1 cell c6"></div>
+                        <div class="col col-1 cell c7"></div>
+                        <div class="col col-1 cell c8"></div>
+                        <div class="col col-1 cell c9"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="js/app.js" crossorigin="anonymous"></script>
+</body>
+</html>
