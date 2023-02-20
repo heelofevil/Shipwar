@@ -24,12 +24,23 @@ function cellClick(elem){
         case "wait": // Если игра еще не началась
             alert("Нажмите Start Game для начала игры")
             break
-        case "play": // Если игра в процессе
+        case "wait_turn_enemy":
+          alert("Ход противника")
+          break
+        case "your_turn": // Если игра в процессе
             if (elem.target.dataset.own === "enemy") {
                 elem.target.classList.add("open")
                 if (elem.target.dataset.state * 1 < 2)
                     elem.target.dataset.state = `${elem.target.dataset.state * 1 + 2}`
+                    if (elem.target.dataset.state > 2){
+                      gameState = 'your_turn'
+                    }else{
+                      gameState = 'wait_turn_enemy'
+                      setTimeout(turn_enemy, 2000)
+                  }
+                    
             }
+              
             break
         case "win":  // Если пользователь победил
         case "lose": // Если пользователь проиграл
@@ -38,9 +49,69 @@ function cellClick(elem){
     }
 }
 
+function random_num(){
+  return Math.floor(Math.random()*10);
+}
+
+// выстрел противника
+function turn_enemy(){
+  let shot_enemy = document.querySelector(`.battle-field.self`);
+  let st = 'random_shot'
+  for (let m = 0; m < 10; m++) {
+    let row = shot_enemy.querySelector(`.r${m}`) // .r0 .r1 ... .r9
+    for (let n = 0; n < 10; n++){
+        let cell = row.querySelector(`.c${n}`)
+        if (cell.dataset.state ==3 && m >1 && m <9 && n >1 && n <9){
+          if (shot_enemy.querySelector(`.r${m}`).querySelector(`.c${n-1}`).dataset.state < 2){
+              let shot_cell = shot_enemy.querySelector(`.r${m}`).querySelector(`.c${n-1}`);
+              shot_cell.dataset.state = `${shot_cell.dataset.state * 1 + 2}`
+              if (shot_cell.dataset.state == 2){st = 'miss'}else{st  = 'shot_ship'}
+              break
+          } else if (shot_enemy.querySelector(`.r${m}`).querySelector(`.c${n+1}`).dataset.state < 2){
+              let shot_cell = shot_enemy.querySelector(`.r${m}`).querySelector(`.c${n+1}`)
+              shot_cell.dataset.state = `${shot_cell.dataset.state * 1 + 2}`
+              if (shot_cell.dataset.state == 2){st = 'miss'}else{st  = 'shot_ship'}
+              break
+          } else if (shot_enemy.querySelector(`.r${m-1}`).querySelector(`.c${n}`).dataset.state < 2){
+              let shot_cell = shot_enemy.querySelector(`.r${m-1}`).querySelector(`.c${n}`)
+              shot_cell.dataset.state = `${shot_cell.dataset.state * 1 + 2}`
+              if (shot_cell.dataset.state == 2){st = 'miss'}else{st  = 'shot_ship'}
+              break
+          } else if (shot_enemy.querySelector(`.r${m+1}`).querySelector(`.c${n}`).dataset.state < 2){
+              let shot_cell = shot_enemy.querySelector(`.r${m+1}`).querySelector(`.c${n}`)
+              shot_cell.dataset.state = `${shot_cell.dataset.state * 1 + 2}`
+              if (shot_cell.dataset.state == 2){st = 'miss'}else{st  = 'shot_ship'}
+              break
+              }
+            }
+          }
+        if (st != 'random_shot'){break}
+        }
+  if (st == 'shot_ship'){setTimeout(turn_enemy, 2000)
+  }else if(st == 'miss'){gameState = "your_turn"}
+  else{
+    let shot_row = shot_enemy.querySelector(`.r${random_num()}`);
+    let shot_colum = shot_row.querySelector(`.c${random_num()}`);
+    shot_colum.dataset.state = `${shot_colum.dataset.state * 1 + 2}`
+    if (shot_colum.dataset.state == 3){setTimeout(turn_enemy, 2000)
+    }else {gameState = "your_turn"}
+  }        
+          
+          
+        
+
+
+
+
+  
+  
+}
+
+
+
 function startGame(){
     // обработчик кнопки старт
-    gameState = "play"
+    gameState = "your_turn"
     resetFields()
     return false;
 }
@@ -74,7 +145,7 @@ function setShips(){
     for (let i=0; i<10; i++) {
             warfield[i] = []
             for (let j = 0; j < 10; j++) {
-                warfield[i][j] = 0
+                warfield[i][j] = 0;
             }
         }
 
@@ -82,17 +153,12 @@ function setShips(){
       let result = 'True';
       for (let i = a - 1; i <= a + 1; i++) {
         for (let j = b - 1; j <= b + 1; j++) {
-          if (warfield[i] && warfield[i][j] && warfield[i][j] !== 0 && (i !== x || j !== y)) {
+          if (warfield[i] && warfield[i][j] && warfield[i][j] !== 0) {
             result = "False";
           }
         }
       }
       return result;
-    }
-    
-      
-    function random_num(){
-        return Math.floor(Math.random()*10);
     }
     
     function set_ship(length_ship){
