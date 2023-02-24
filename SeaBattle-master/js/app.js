@@ -32,7 +32,9 @@ function cellClick(elem){
                 elem.target.classList.add("open")
                 if (elem.target.dataset.state * 1 < 2)
                     elem.target.dataset.state = `${elem.target.dataset.state * 1 + 2}`
+                    
                     if (elem.target.dataset.state > 2){
+                      check_health(elem.target.dataset.col* 1,elem.target.dataset.row* 1)
                       gameState = 'your_turn'
                     }else{
                       gameState = 'wait_turn_enemy'
@@ -58,7 +60,7 @@ function turn_enemy(){
   let shot_enemy = document.querySelector(`.battle-field.self`);
   let st = 'random_shot'
   for (let m = 0; m < 10; m++) {
-    let row = shot_enemy.querySelector(`.r${m}`) // .r0 .r1 ... .r9
+    let row = shot_enemy.querySelector(`.r${m}`)
     for (let n = 0; n < 10; n++){
         let cell = row.querySelector(`.c${n}`)
         if (cell.dataset.state ==3 && m >1 && m <9 && n >1 && n <9){
@@ -92,20 +94,49 @@ function turn_enemy(){
   else{
     let shot_row = shot_enemy.querySelector(`.r${random_num()}`);
     let shot_colum = shot_row.querySelector(`.c${random_num()}`);
+    do {
+      shot_row = shot_enemy.querySelector(`.r${random_num()}`);
+      shot_colum = shot_row.querySelector(`.c${random_num()}`);
+    } while (shot_colum.dataset.state == 2);
+
     shot_colum.dataset.state = `${shot_colum.dataset.state * 1 + 2}`
     if (shot_colum.dataset.state == 3){setTimeout(turn_enemy, 2000)
     }else {gameState = "your_turn"}
-  }        
-          
-          
-        
-
-
-
-
-  
-  
+  }         
 }
+// Смотрит после выстрела вокруг и заполняет пустые клетки если там нет корабля
+function check_health(a, b){
+
+  let count_health = 0;
+    for (let i = b -1 ; i <= b + 1; i++) {
+      for (let j = a-1 ; j <= a + 1; j++) {
+          let per = document.querySelector(`.battle-field.enemy`).querySelector(`.r${i}`).querySelector(`.c${j}`)
+        if ( per != null){
+          if (per.dataset.state == 1){
+            count_health += 1;
+          }
+        }
+      }
+    }
+  
+
+  if (count_health == 0){
+    for (let i = b - 1; i <= b + 1; i++) {
+      for (let j = a - 1; j <= a + 1; j++) {
+        let asa = document.querySelector(`.battle-field.enemy`).querySelector(`.r${i}`).querySelector(`.c${j}`)
+        if (asa.dataset.state == 0){
+          let asa4 = document.querySelector(`.battle-field.enemy`).querySelector(`.r${i}`).querySelector(`.c${j}`)
+          asa4.dataset.state = asa4.dataset.state *1 +2
+          asa4.classList.add("open")
+        };
+      }
+    }
+  }
+
+}
+
+
+
 
 
 
@@ -176,6 +207,7 @@ function setShips(){
             if (check(y,x) === 'True' && check(y,x+start) === 'True'){
                 for (i=x;i<=(x+start);i++){
                   warfield[y][i] = 1;
+                  
                 }
               break;
             }
@@ -184,7 +216,9 @@ function setShips(){
           else if (y<start && x<start){
             if (check(y,x) === 'True' && check(y+start,x) === 'True'){
               for (i=y;i<=(y+start);i++){
-                warfield[i][x] = 1;}
+                warfield[i][x] = 1;
+
+              }
               break;
             }
           } 
@@ -192,7 +226,11 @@ function setShips(){
           else if (x>end && y<end){
             if (check(y,x-start) === 'True' && check(y,x) === 'True'){
               for (i=(x-start);i<=x;i++){
-                warfield[y][i] = 1;}
+                warfield[y][i] = 1;
+                
+
+              
+              }
               break;
             }
           } 
@@ -200,7 +238,10 @@ function setShips(){
           else if (x<end && y>end){
             if (check(y-start,x) === 'True' && check(y,x) === 'True'){
                 for (i=(y-start);i<=y;i++){
-                  warfield[i][x] = 1;}
+                  warfield[i][x] = 1;
+                  
+
+                }
               break;
             } 
            }
@@ -208,7 +249,9 @@ function setShips(){
           else if (x>end && y>end){
             if (check(y-start,x) === 'True' && check(y,x) === 'True'){
               for (i=(y-start);i<=y;i++){
-                warfield[i][x] = 1;}
+                warfield[i][x] = 1;
+                
+              }
                 break;
               }
             }
