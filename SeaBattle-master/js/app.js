@@ -92,11 +92,9 @@ function turn_enemy(){
   if (st == 'shot_ship'){setTimeout(turn_enemy, 2000)
   }else if(st == 'miss'){gameState = "your_turn"}
   else{
-    let shot_row = shot_enemy.querySelector(`.r${random_num()}`);
-    let shot_colum = shot_row.querySelector(`.c${random_num()}`);
+    let shot_colum = shot_enemy.querySelector(`.r${random_num()} .c${random_num()}`);
     do {
-      shot_row = shot_enemy.querySelector(`.r${random_num()}`);
-      shot_colum = shot_row.querySelector(`.c${random_num()}`);
+      shot_colum = shot_enemy.querySelector(`.r${random_num()} .c${random_num()}`);
     } while (shot_colum.dataset.state == 2);
 
     shot_colum.dataset.state = `${shot_colum.dataset.state * 1 + 2}`
@@ -104,39 +102,65 @@ function turn_enemy(){
     }else {gameState = "your_turn"}
   }         
 }
-// Смотрит после выстрела вокруг и заполняет пустые клетки если там нет корабля
-function check_health(a, b){
 
-  let count_health = 0;
+// Смотрит после выстрела вокруг и заполняет пустые клетки если там нет корабля (бомбит пока только по противнику)
+function check_health(a, b){
+  let how_fire = ''
+  if (gameState == "your_turn"){
+    how_fire = 'enemy'
+  }else{how_fire = 'self'}
+
+  let memory_id = document.querySelector(`.battle-field.${how_fire} .r${b} .c${a}`).dataset.deck
+  let a_ship = [] //colum
+  let b_ship = []  // row
+  let kill = 0
+
     for (let i = b -1 ; i <= b + 1; i++) {
       for (let j = a-1 ; j <= a + 1; j++) {
-          let per = document.querySelector(`.battle-field.enemy`).querySelector(`.r${i}`).querySelector(`.c${j}`)
-        if ( per != null){
-          if (per.dataset.state == 1){
-            count_health += 1;
+        if (i >= 0 && i < 10 && j >= 0 && j < 10){
+          if (document.querySelector(`.battle-field.${how_fire} .r${i} .c${j}`).dataset.deck == memory_id){
+            b_ship.push(i);
+            a_ship.push(j);
           }
         }
       }
     }
-  
-
-  if (count_health == 0){
-    for (let i = b - 1; i <= b + 1; i++) {
-      for (let j = a - 1; j <= a + 1; j++) {
-        let asa = document.querySelector(`.battle-field.enemy`).querySelector(`.r${i}`).querySelector(`.c${j}`)
-        if (asa.dataset.state == 0){
-          let asa4 = document.querySelector(`.battle-field.enemy`).querySelector(`.r${i}`).querySelector(`.c${j}`)
-          asa4.dataset.state = asa4.dataset.state *1 +2
-          asa4.classList.add("open")
-        };
+    if (a_ship[0] == a_ship[1]){
+      for (let g = 0; g < 10; g++){
+        if (document.querySelector(`.battle-field.${how_fire} .r${g} .c${a_ship[0]}`).dataset.deck == memory_id){
+          if (!b_ship.includes(g)){
+            a_ship.push(a_ship[0]);
+            b_ship.push(g);
+          }
+          if (document.querySelector(`.battle-field.${how_fire} .r${g} .c${a_ship[0]}`).dataset.state == 3){kill +=1}            
+        }
+      }
+    }else{
+      for (let g = 0; g < 10; g++){
+        if (document.querySelector(`.battle-field.${how_fire} .r${b_ship[0]} .c${g}`).dataset.deck == memory_id){
+          if (!a_ship.includes(g)){
+            a_ship.push(g);
+            b_ship.push(b_ship[0]);
+          }
+          if (document.querySelector(`.battle-field.${how_fire} .r${b_ship[0]} .c${g}`).dataset.state == 3){kill +=1}
+        }
+      }
+    }
+    if (kill == a_ship.length){
+      for (let paint = 0; paint <= a_ship.length; paint++){
+        for (let i = b_ship[paint] -1 ; i <= b_ship[paint] + 1; i++) {
+          for (let j = a_ship[paint]-1 ; j <= a_ship[paint] + 1; j++) {
+            if (i >= 0 && i < 10 && j >= 0 && j < 10){
+              if (document.querySelector(`.battle-field.${how_fire} .r${i} .c${j}`).dataset.state == 0){
+                document.querySelector(`.battle-field.${how_fire} .r${i} .c${j}`).dataset.state = 2
+                document.querySelector(`.battle-field.${how_fire} .r${i} .c${j}`).classList.add("open")
+              }
+            }
+          }
+        }
       }
     }
   }
-
-}
-
-
-
 
 
 
@@ -163,7 +187,8 @@ function resetFields(){
                 }
                 cell.dataset.row = `${i}`
                 cell.dataset.col = `${j}`
-                cell.dataset.state = fieldShips[i][j]
+                cell.dataset.state = fieldShips[i][j] > 0 ? 1 : 0
+                cell.dataset.deck = fieldShips[i][j]
                 cell.dataset.own = own
             }
         }
@@ -205,8 +230,9 @@ function setShips(){
           if (y>=3 && x>=3 && y<=6 && x<=6){
             // строит направо
             if (check(y,x) === 'True' && check(y,x+start) === 'True'){
+              let rnd = Math.floor(Math.random()*10000);
                 for (i=x;i<=(x+start);i++){
-                  warfield[y][i] = 1;
+                  warfield[y][i] = rnd;
                   
                 }
               break;
@@ -215,8 +241,9 @@ function setShips(){
           // строит вниз
           else if (y<start && x<start){
             if (check(y,x) === 'True' && check(y+start,x) === 'True'){
+              let rnd = Math.floor(Math.random()*10000);
               for (i=y;i<=(y+start);i++){
-                warfield[i][x] = 1;
+                warfield[i][x] = rnd;
 
               }
               break;
@@ -225,11 +252,9 @@ function setShips(){
           // строит влево
           else if (x>end && y<end){
             if (check(y,x-start) === 'True' && check(y,x) === 'True'){
+              let rnd = Math.floor(Math.random()*10000);
               for (i=(x-start);i<=x;i++){
-                warfield[y][i] = 1;
-                
-
-              
+                warfield[y][i] = rnd;
               }
               break;
             }
@@ -237,10 +262,9 @@ function setShips(){
           //строит вверх
           else if (x<end && y>end){
             if (check(y-start,x) === 'True' && check(y,x) === 'True'){
+              let rnd = Math.floor(Math.random()*10000);
                 for (i=(y-start);i<=y;i++){
-                  warfield[i][x] = 1;
-                  
-
+                  warfield[i][x] = rnd;
                 }
               break;
             } 
@@ -248,9 +272,9 @@ function setShips(){
            //строит влево
           else if (x>end && y>end){
             if (check(y-start,x) === 'True' && check(y,x) === 'True'){
+              let rnd = Math.floor(Math.random()*10000);
               for (i=(y-start);i<=y;i++){
-                warfield[i][x] = 1;
-                
+                warfield[i][x] = rnd;
               }
                 break;
               }
