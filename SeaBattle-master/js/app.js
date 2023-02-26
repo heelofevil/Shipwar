@@ -59,29 +59,92 @@ function random_num(){
 function turn_enemy(){
   let shot_enemy = document.querySelector(`.battle-field.self`);
   let st = 'random_shot'
+  let flag_x = 0;
   for (let m = 0; m < 10; m++) {
     let row = shot_enemy.querySelector(`.r${m}`)
     for (let n = 0; n < 10; n++){
         let cell = row.querySelector(`.c${n}`)
-        if (cell.dataset.state ==3 && m >1 && m <9 && n >1 && n <9){
+        if (cell.dataset.state ==3 && m >0 && m <9 && n >0 && n <9){
+            if (shot_enemy.querySelector(`.r${m}`).querySelector(`.c${n-1}`).dataset.state ==3 || 
+            shot_enemy.querySelector(`.r${m}`).querySelector(`.c${n+1}`).dataset.state ==3){
+              flag_x = 1
+            } else if (shot_enemy.querySelector(`.r${m-1}`).querySelector(`.c${n}`).dataset.state ==3 || 
+            shot_enemy.querySelector(`.r${m+1}`).querySelector(`.c${n}`).dataset.state ==3){
+              flag_x = 2
+            }
+        if (flag_x == 1){
+          for (let gg = 1; gg <5; gg++){
+            let shot_cell = shot_enemy.querySelector(`.r${m}`).querySelector(`.c${n-gg}`).dataset.state
+            if (shot_cell < 2){ 
+              shot_cell = `${shot_cell * 1 + 2}`
+              check_health(n-gg, m)
+              if (shot_cell == 2){
+                st = 'miss'
+              }else{st = 'shot_ship'}
+              break
+            }else if(shot_cell == 2){break}
+          }
+          if (st = 'random_shot'){
+          for (let tt = 1; tt <5; tt++){
+            let shot_cell = shot_enemy.querySelector(`.r${m}`).querySelector(`.c${n+tt}`).dataset.state
+            if (shot_cell < 2){ 
+              shot_cell = `${shot_cell * 1 + 2}`
+              check_health(n+tt, m)
+              if (shot_cell == 2){
+                st = 'miss'
+              }else{st  = 'shot_ship'}
+              break
+            }else if(shot_cell == 2){break}
+          }}
+        }
+        if (flag_x == 2){
+          for (let gg = 1; gg <5; gg++){
+            let shot_cell = shot_enemy.querySelector(`.r${m-gg}`).querySelector(`.c${n}`).dataset.state
+            if (shot_cell < 2){ 
+              shot_cell = `${shot_cell * 1 + 2}`
+              check_health(n, m-gg)
+              if (shot_cell == 2){
+                st = 'miss'
+              }else{st  = 'shot_ship'}
+              break
+            }else if(shot_cell == 2){break}
+          }
+          if (st = 'random_shot'){
+          for (let tt = 1; tt <5; tt++){
+            let shot_cell = shot_enemy.querySelector(`.r${m+tt}`).querySelector(`.c${n}`).dataset.state
+            if (shot_cell < 2){ 
+              shot_cell = `${shot_cell * 1 + 2}`
+              check_health(n, m+tt)
+              if (shot_cell == 2){
+                st = 'miss'
+              }else{st  = 'shot_ship'}
+              break
+            }else if(shot_cell == 2){break}
+          }}
+        }
+          
           if (shot_enemy.querySelector(`.r${m}`).querySelector(`.c${n-1}`).dataset.state < 2){
               let shot_cell = shot_enemy.querySelector(`.r${m}`).querySelector(`.c${n-1}`);
               shot_cell.dataset.state = `${shot_cell.dataset.state * 1 + 2}`
+              check_health(n-1, m)
               if (shot_cell.dataset.state == 2){st = 'miss'}else{st  = 'shot_ship'}
               break
           } else if (shot_enemy.querySelector(`.r${m}`).querySelector(`.c${n+1}`).dataset.state < 2){
               let shot_cell = shot_enemy.querySelector(`.r${m}`).querySelector(`.c${n+1}`)
               shot_cell.dataset.state = `${shot_cell.dataset.state * 1 + 2}`
+              check_health(n+1, m)
               if (shot_cell.dataset.state == 2){st = 'miss'}else{st  = 'shot_ship'}
               break
           } else if (shot_enemy.querySelector(`.r${m-1}`).querySelector(`.c${n}`).dataset.state < 2){
               let shot_cell = shot_enemy.querySelector(`.r${m-1}`).querySelector(`.c${n}`)
               shot_cell.dataset.state = `${shot_cell.dataset.state * 1 + 2}`
+              check_health(n, m-1)
               if (shot_cell.dataset.state == 2){st = 'miss'}else{st  = 'shot_ship'}
               break
           } else if (shot_enemy.querySelector(`.r${m+1}`).querySelector(`.c${n}`).dataset.state < 2){
               let shot_cell = shot_enemy.querySelector(`.r${m+1}`).querySelector(`.c${n}`)
               shot_cell.dataset.state = `${shot_cell.dataset.state * 1 + 2}`
+              check_health(n, m+1)
               if (shot_cell.dataset.state == 2){st = 'miss'}else{st  = 'shot_ship'}
               break
               }
@@ -92,14 +155,16 @@ function turn_enemy(){
   if (st == 'shot_ship'){setTimeout(turn_enemy, 2000)
   }else if(st == 'miss'){gameState = "your_turn"}
   else{
-    let shot_colum = shot_enemy.querySelector(`.r${random_num()} .c${random_num()}`);
-    do {
-      shot_colum = shot_enemy.querySelector(`.r${random_num()} .c${random_num()}`);
-    } while (shot_colum.dataset.state == 2);
-
-    shot_colum.dataset.state = `${shot_colum.dataset.state * 1 + 2}`
-    if (shot_colum.dataset.state == 3){setTimeout(turn_enemy, 2000)
-    }else {gameState = "your_turn"}
+    let rnd_r = random_num();
+    let rnd_c = random_num();
+    let shot_colum = shot_enemy.querySelector(`.r${rnd_r} .c${rnd_c}`);
+    if (shot_colum.dataset.state < 2){
+      shot_colum.dataset.state = `${shot_colum.dataset.state * 1 + 2}`
+      check_health(rnd_c,rnd_r)
+      if (shot_colum.dataset.state == 3){
+        setTimeout(turn_enemy, 2000)
+      } else {gameState = "your_turn"} 
+    }else{turn_enemy()}
   }         
 }
 
