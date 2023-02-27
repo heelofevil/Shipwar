@@ -1,6 +1,7 @@
 const colName = ['А', 'Б', 'В', 'Г', 'Д', 'Е', 'Ж', 'З', 'И', 'К']
 // Глобальная переменная для отслеживания состояния игры
 let gameState = "wait"
+let status_game = document.querySelector(`.my-4`)
 
 // Обработчик события полной загрузки страницы
 window.onload = function () {
@@ -30,22 +31,28 @@ function cellClick(elem) {
     case "your_turn": // Если игра в процессе
       if (elem.target.dataset.own === "enemy") {
         elem.target.classList.add("open")
-        if (elem.target.dataset.state * 1 < 2)
+        if (elem.target.dataset.state * 1 < 2) {
           elem.target.dataset.state = `${elem.target.dataset.state * 1 + 2}`
-
+          if (check_end() == "win") {
+            gameState = "win"
+            break
+          }
+        } else { gameState = 'your_turn' }
         if (elem.target.dataset.state > 2) {
           check_health(elem.target.dataset.col * 1, elem.target.dataset.row * 1)
           gameState = 'your_turn'
         } else {
           gameState = 'wait_turn_enemy'
+          status_game.textContent = "Ход противника."
           setTimeout(turn_enemy, 2000)
         }
-
       }
-
       break
-    case "win":  // Если пользователь победил
+
+    case "win": // Если пользователь победил
+      alert('Поздравляю, ты победил!')
     case "lose": // Если пользователь проиграл
+      alert('Поражение(')
       alert("Нажмите Start Game для перезапуска игры")
       break
   }
@@ -57,164 +64,122 @@ function random_num() {
 
 // выстрел противника
 function turn_enemy() {
-  let shot_enemy = document.querySelector(`.battle-field.self`);
-  let st = 'random_shot'
-  let around_three = 0;
-  for (let m = 0; m < 10; m++) {
-    let row = shot_enemy.querySelector(`.r${m}`)
-    for (let n = 0; n < 10; n++) {
-      let cell = row.querySelector(`.c${n}`)
-      if (cell.dataset.state == 3) {
-        if (n - 1 >= 0 && shot_enemy.querySelector(`.r${m}`).querySelector(`.c${n - 1}`).dataset.state == 3) {
-          around_three = 1 // 1-тройка слева 
-        } else if (n + 1 < 10 && shot_enemy.querySelector(`.r${m}`).querySelector(`.c${n + 1}`).dataset.state == 3) {
-          around_three = 2 // 2-тройка справа
-        } else if (m - 1 >= 0 && shot_enemy.querySelector(`.r${m - 1}`).querySelector(`.c${n}`).dataset.state == 3) {
-          around_three = 3 // 3-тройка сверху
-        } else if (m + 1 < 10 && shot_enemy.querySelector(`.r${m + 1}`).querySelector(`.c${n}`).dataset.state == 3) {
-          around_three = 4 // 4-тройка снизу
-        }
-        let alt_cell;
-        switch (around_three) {
-          case 1:
-            alt_cell = shot_enemy.querySelector(`.r${m} .c${n + 1}`).dataset.state
-            if (n + 1 < 10 && alt_cell < 2) {
-              alt_cell = Number(alt_cell) +2
-              if (alt_cell == 3) {
-                st = 'shot_ship'
-                check_health(n + 1, m)
-              } else { st = 'miss' }
-            }
-            break
-          case 2:
-            alt_cell = shot_enemy.querySelector(`.r${m} .c${n - 1}`).dataset.state
-            if (n - 1 >= 0 && alt_cell < 2) {
-              alt_cell = Number(alt_cell) +2
-              if (alt_cell == 3) {
-                st = 'shot_ship'
+  if (check_end() == "lose") {
+    gameState = "lose"
+  } else {
+    status_game.textContent = "Ход противника."
+    let shot_enemy = document.querySelector(`.battle-field.self`);
+    let st = 'random_shot'
+    let around_three = 0;
+    for (let m = 0; m < 10; m++) {
+      let row = shot_enemy.querySelector(`.r${m}`)
+      for (let n = 0; n < 10; n++) {
+        let cell = row.querySelector(`.c${n}`)
+        if (cell.dataset.state == 3) {
+          if (n - 1 >= 0 && shot_enemy.querySelector(`.r${m} .c${n - 1}`).dataset.state == 3) {
+            around_three = 1 // 1-тройка слева 
+          } else if (n + 1 < 10 && shot_enemy.querySelector(`.r${m} .c${n + 1}`).dataset.state == 3) {
+            around_three = 2 // 2-тройка справа
+          } else if (m - 1 >= 0 && shot_enemy.querySelector(`.r${m - 1} .c${n}`).dataset.state == 3) {
+            around_three = 3 // 3-тройка сверху
+          } else if (m + 1 < 10 && shot_enemy.querySelector(`.r${m + 1} .c${n}`).dataset.state == 3) {
+            around_three = 4 // 4-тройка снизу
+          } else { around_three = 0 }
+          let alt_cell;
+          switch (around_three) {
+            case 1:
+              alt_cell = shot_enemy.querySelector(`.r${m} .c${n + 1}`)
+              if (n + 1 < 10 && alt_cell.dataset.state < 2) {
+                alt_cell.dataset.state = `${alt_cell.dataset.state * 1 + 2}`
+                if (alt_cell.dataset.state == 3) {
+                  st = 'shot_ship'
+                  check_health(n + 1, m)
+                } else { st = 'miss' }
+              }
+              break
+            case 2:
+              alt_cell = shot_enemy.querySelector(`.r${m} .c${n - 1}`)
+              if (n - 1 >= 0 && alt_cell.dataset.state < 2) {
+                alt_cell.dataset.state = `${alt_cell.dataset.state * 1 + 2}`
+                if (alt_cell.dataset.state == 3) {
+                  st = 'shot_ship'
+                  check_health(n - 1, m)
+                } else { st = 'miss' }
+              }
+              break
+            case 3:
+              alt_cell = shot_enemy.querySelector(`.r${m + 1} .c${n}`)
+              if (m + 1 < 10 && alt_cell.dataset.state < 2) {
+                alt_cell.dataset.state = `${alt_cell.dataset.state * 1 + 2}`
+                if (alt_cell.dataset.state == 3) {
+                  st = 'shot_ship'
+                  check_health(n, m + 1)
+                } else { st = 'miss' }
+              }
+              break
+            case 4:
+              alt_cell = shot_enemy.querySelector(`.r${m - 1} .c${n}`)
+              if (m - 1 >= 0 && alt_cell.dataset.state < 2) {
+                alt_cell.dataset.state = `${alt_cell.dataset.state * 1 + 2}`
+                if (alt_cell.dataset.state == 3) {
+                  st = 'shot_ship'
+                  check_health(n, m - 1)
+                } else { st = 'miss' }
+              }
+              break
+            default: // стреляет вокруг найденной точки
+              if (n - 1 >= 0 && shot_enemy.querySelector(`.r${m} .c${n - 1}`).dataset.state < 2) {
+                let shot_cell = shot_enemy.querySelector(`.r${m} .c${n - 1}`);
+                shot_cell.dataset.state = `${shot_cell.dataset.state * 1 + 2}`
                 check_health(n - 1, m)
-              } else { st = 'miss' }
-            }
-            break
-          case 3:
-            alt_cell = shot_enemy.querySelector(`.r${m + 1} .c${n}`).dataset.state
-            if (m + 1 < 10 && alt_cell < 2) {
-              alt_cell = Number(alt_cell) +2
-              if (alt_cell == 3) {
-                st = 'shot_ship'
-                check_health(n, m + 1)
-              } else { st = 'miss' }
-            }
-            break
-          case 4:
-            alt_cell = shot_enemy.querySelector(`.r${m - 1} .c${n}`).dataset.state
-            if (m - 1 >= 0 && alt_cell < 2) {
-              alt_cell = Number(alt_cell) +2
-              if (alt_cell == 3) {
-                st = 'shot_ship'
+                if (shot_cell.dataset.state == 2) { st = 'miss' } else { st = 'shot_ship' }
+                break
+              } else if (n + 1 < 10 && shot_enemy.querySelector(`.r${m} .c${n + 1}`).dataset.state < 2) {
+                let shot_cell = shot_enemy.querySelector(`.r${m} .c${n + 1}`)
+                shot_cell.dataset.state = `${shot_cell.dataset.state * 1 + 2}`
+                check_health(n + 1, m)
+                if (shot_cell.dataset.state == 2) { st = 'miss' } else { st = 'shot_ship' }
+                break
+              } else if (m - 1 >= 0 && shot_enemy.querySelector(`.r${m - 1} .c${n}`).dataset.state < 2) {
+                let shot_cell = shot_enemy.querySelector(`.r${m - 1} .c${n}`)
+                shot_cell.dataset.state = `${shot_cell.dataset.state * 1 + 2}`
                 check_health(n, m - 1)
-              } else { st = 'miss' }
-            }
-            break
-          default: // стреляет вокруг найденной точки
-            if (n - 1>=0 && shot_enemy.querySelector(`.r${m}`).querySelector(`.c${n - 1}`).dataset.state < 2) {
-              let shot_cell = shot_enemy.querySelector(`.r${m}`).querySelector(`.c${n - 1}`);
-              shot_cell.dataset.state = `${shot_cell.dataset.state * 1 + 2}`
-              check_health(n - 1, m)
-              if (shot_cell.dataset.state == 2) { st = 'miss' } else { st = 'shot_ship' }
-              break
-            } else if (n + 1 < 10 && shot_enemy.querySelector(`.r${m}`).querySelector(`.c${n + 1}`).dataset.state < 2) {
-              let shot_cell = shot_enemy.querySelector(`.r${m}`).querySelector(`.c${n + 1}`)
-              shot_cell.dataset.state = `${shot_cell.dataset.state * 1 + 2}`
-              check_health(n + 1, m)
-              if (shot_cell.dataset.state == 2) { st = 'miss' } else { st = 'shot_ship' }
-              break
-            } else if (m - 1>=0 && shot_enemy.querySelector(`.r${m - 1}`).querySelector(`.c${n}`).dataset.state < 2) {
-              let shot_cell = shot_enemy.querySelector(`.r${m - 1}`).querySelector(`.c${n}`)
-              shot_cell.dataset.state = `${shot_cell.dataset.state * 1 + 2}`
-              check_health(n, m - 1)
-              if (shot_cell.dataset.state == 2) { st = 'miss' } else { st = 'shot_ship' }
-              break
-            } else if (m + 1 < 10 && shot_enemy.querySelector(`.r${m + 1}`).querySelector(`.c${n}`).dataset.state < 2) {
-              let shot_cell = shot_enemy.querySelector(`.r${m + 1}`).querySelector(`.c${n}`)
-              shot_cell.dataset.state = `${shot_cell.dataset.state * 1 + 2}`
-              check_health(n, m + 1)
-              if (shot_cell.dataset.state == 2) { st = 'miss' } else { st = 'shot_ship' }
-              break
-            }
-
+                if (shot_cell.dataset.state == 2) { st = 'miss' } else { st = 'shot_ship' }
+                break
+              } else if (m + 1 < 10 && shot_enemy.querySelector(`.r${m + 1} .c${n}`).dataset.state < 2) {
+                let shot_cell = shot_enemy.querySelector(`.r${m + 1} .c${n}`)
+                shot_cell.dataset.state = `${shot_cell.dataset.state * 1 + 2}`
+                check_health(n, m + 1)
+                if (shot_cell.dataset.state == 2) { st = 'miss' } else { st = 'shot_ship' }
+                break
+              }
+          }
         }
-
-        // if (flag_x == 1){
-        //   for (let gg = 1; gg <5; gg++){
-        //     let shot_cell = shot_enemy.querySelector(`.r${m}`).querySelector(`.c${n-gg}`).dataset.state
-        //     if (shot_cell < 2){ 
-        //       shot_cell = `${shot_cell * 1 + 2}`
-        //       check_health(n-gg, m)
-        //       if (shot_cell == 2){
-        //         st = 'miss'
-        //       }else{st = 'shot_ship'}
-        //       break
-        //     }else if(shot_cell == 2){break}
-        //   }
-        //   if (st = 'random_shot'){
-        //   for (let tt = 1; tt <5; tt++){
-        //     let shot_cell = shot_enemy.querySelector(`.r${m}`).querySelector(`.c${n+tt}`).dataset.state
-        //     if (shot_cell < 2){ 
-        //       shot_cell = `${shot_cell * 1 + 2}`
-        //       check_health(n+tt, m)
-        //       if (shot_cell == 2){
-        //         st = 'miss'
-        //       }else{st  = 'shot_ship'}
-        //       break
-        //     }else if(shot_cell == 2){break}
-        //   }}
-        // }
-        // if (flag_x == 2){
-        //   for (let gg = 1; gg <5; gg++){
-        //     let shot_cell = shot_enemy.querySelector(`.r${m-gg}`).querySelector(`.c${n}`).dataset.state
-        //     if (shot_cell < 2){ 
-        //       shot_cell = `${shot_cell * 1 + 2}`
-        //       check_health(n, m-gg)
-        //       if (shot_cell == 2){
-        //         st = 'miss'
-        //       }else{st  = 'shot_ship'}
-        //       break
-        //     }else if(shot_cell == 2){break}
-        //   }
-        //   if (st = 'random_shot'){
-        //   for (let tt = 1; tt <5; tt++){
-        //     let shot_cell = shot_enemy.querySelector(`.r${m+tt}`).querySelector(`.c${n}`).dataset.state
-        //     if (shot_cell < 2){ 
-        //       shot_cell = `${shot_cell * 1 + 2}`
-        //       check_health(n, m+tt)
-        //       if (shot_cell == 2){
-        //         st = 'miss'
-        //       }else{st  = 'shot_ship'}
-        //       break
-        //     }else if(shot_cell == 2){break}
-        //     }
-        //   } 
-        // }
-
-      }
+      } if (st != 'random_shot') { break }
+      if (st != 'random_shot') { break }
     }
-    if (st != 'random_shot') { break }
-  }
-  if (st == 'shot_ship') {
-    setTimeout(turn_enemy, 2000)
-  } else if (st == 'miss') { gameState = "your_turn" }
-  else {
-    let rnd_r = random_num();
-    let rnd_c = random_num();
-    let shot_colum = shot_enemy.querySelector(`.r${rnd_r} .c${rnd_c}`);
-    if (shot_colum.dataset.state < 2) {
-      shot_colum.dataset.state = `${shot_colum.dataset.state * 1 + 2}`
-      check_health(rnd_c, rnd_r)
-      if (shot_colum.dataset.state == 3) {
-        setTimeout(turn_enemy, 2000)
-      } else { gameState = "your_turn" }
-    } else { turn_enemy() }
+    if (st == 'shot_ship') {
+      setTimeout(turn_enemy, 2000)
+    } else if (st == 'miss') {
+      status_game.textContent = "Твой ход."
+      gameState = "your_turn";
+    }
+    else {
+      let rnd_r = random_num();
+      let rnd_c = random_num();
+      let shot_colum = shot_enemy.querySelector(`.r${rnd_r} .c${rnd_c}`);
+      if (shot_colum.dataset.state < 2) {
+        shot_colum.dataset.state = `${shot_colum.dataset.state * 1 + 2}`
+        check_health(rnd_c, rnd_r)
+        if (shot_colum.dataset.state == 3) {
+          status_game.textContent = "Попал!"
+          setTimeout(turn_enemy, 2000)
+        } else {
+          gameState = "your_turn"
+          status_game.textContent = "Твой ход."
+        }
+      } else { turn_enemy() }
+    }
   }
 }
 
@@ -278,10 +243,10 @@ function check_health(a, b) {
 }
 
 
-
 function startGame() {
   // обработчик кнопки старт
   gameState = "your_turn"
+  status_game.textContent = "Твой ход."
   resetFields()
   return false;
 }
@@ -347,7 +312,6 @@ function setShips() {
           let rnd = Math.floor(Math.random() * 10000);
           for (i = x; i <= (x + start); i++) {
             warfield[y][i] = rnd;
-
           }
           break;
         }
@@ -358,7 +322,6 @@ function setShips() {
           let rnd = Math.floor(Math.random() * 10000);
           for (i = y; i <= (y + start); i++) {
             warfield[i][x] = rnd;
-
           }
           break;
         }
@@ -404,4 +367,26 @@ function setShips() {
 
 
   return warfield
+}
+
+function check_end() {
+  let count_self = 0;
+  let count_enemy = 0;
+  for (let s = 0; s < 10; s++) {
+    for (let t = 0; t < 10; t++) {
+      if (document.querySelector(`.battle-field.enemy .r${s} .c${t}`).dataset.state == 1) {
+        count_self += 1;
+      }
+      if (document.querySelector(`.battle-field.self .r${s} .c${t}`).dataset.state == 1) {
+        count_enemy += 1;
+      }
+    }
+  }
+  console.log(`Осталось убить мне ${count_self}`)
+  console.log(` Осталось убить ИИ ${count_enemy}`)
+  if (count_self == 0) {
+    return "win"
+  } else if (count_enemy == 0) {
+    return "lose"
+  }
 }
